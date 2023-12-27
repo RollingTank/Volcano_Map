@@ -1,8 +1,8 @@
 #imported folium, pandas, and random
 from cgitb import html
 from concurrent.futures.process import _MAX_WINDOWS_WORKERS
-import folium, pandas, random
-my_map = folium.Map(location=[41.4925, -99.9018], zoom_start=5, tiles="Stamen Terrain")
+import folium, pandas, random, webbrowser, os
+my_map = folium.Map(location=[41.4925, -99.9018], zoom_start=5, tiles="openstreetmap")
 
 #color generator
 def color_picker(): #parameter may be elev (see below)
@@ -19,7 +19,7 @@ def color_picker(): #parameter may be elev (see below)
     #   return possible_colors[0]
 
 #getting the data; see Volcanoes.txt
-data = pandas.read_csv("Volcanoes.txt")
+data = pandas.read_csv("../Resources/Volcanoes.txt")
 latitude = list(data["LAT"])
 longitude = list(data["LON"])
 
@@ -37,16 +37,21 @@ for x, y, z, a, b, c, d, e in zip(latitude, longitude, name, location, status, e
     popup = folium.Popup("Information: \n  Name: {} \n  Location: {} \n  Status: {} \n  Elevation: {} m  \n Volcano Type: {} \n Time Frame: {} ".format(str(z), str(a), str(b), str(c), str(d), str(e)), max_width=500)
     fg.add_child(folium.Marker(location=[x, y], radius=6, popup=popup, parse_HTML = True, icon=folium.Icon(color=color_picker())))
     my_map.add_child(fg)
-    my_map.save("volcanoInformation.html")
+    my_map.save("..\\HTML\\volcanoInformation.html")
 
 #adding the population layer to the map; see world-two.json
 fg2 = folium.FeatureGroup(name="World Population")
-fg2.add_child(folium.GeoJson(data=open("world_two.json", "r", encoding="utf-8-sig").read(),
-style_function=lambda x: {'fillColor':'green' if x['properties']['POP2005'] < 50000000
+fg2.add_child(folium.GeoJson(data=open("../Resources/world_two.json", "r", encoding="utf-8-sig").read(),
+                             style_function=lambda x: {'fillColor':'green' if x['properties']['POP2005'] < 50000000
 else 'orange' if 50000000 <= x['properties']['POP2005'] < 100000000 else 'red', 'color':'black','weight':0,'dashArray':'5, 5'}, smooth_factor=0.0005)) 
 my_map.add_child(fg2)
-my_map.save("volcanoInformation.html")
+my_map.save("..\\HTML\\volcanoInformation.html")
+
 
 #add layer control 
 my_map.add_child(folium.LayerControl('topright'))
-my_map.save("volcanoInformation.html")
+my_map.save("..\\HTML\\volcanoInformation.html")
+
+#Open App
+filename = "file:///"+os.getcwd()+"/" + "../HTML/volcanoInformation.html"
+webbrowser.open_new_tab(filename)
