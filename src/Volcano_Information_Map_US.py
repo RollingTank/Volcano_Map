@@ -4,7 +4,7 @@ from concurrent.futures.process import _MAX_WINDOWS_WORKERS
 import folium, pandas, random, webbrowser, os
 my_map = folium.Map(location=[41.4925, -99.9018], zoom_start=5, tiles="openstreetmap")
 
-#color generator
+#color generator, generates colors
 def color_picker(): #parameter may be elev (see below)
     x = random.randint(0,17)
     possible_colors = ['red', 'blue', 'green', 'purple', 'orange', 'darkred','lightred', 'beige', 'darkblue', 'darkgreen', 'cadetblue', 'darkpurple', 'pink', 'lightblue', 'lightgreen', 'gray', 'black', 'lightgray']
